@@ -1,0 +1,64 @@
+<panel>
+  <title>Windows - Event Count by Event ID - Over Time</title>
+
+  <input type="time" token="time_token" searchWhenChanged="true">
+    <label>Time</label>
+    <default>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+    </default>
+  </input>
+
+  <input type="dropdown" token="EventHost" searchWhenChanged="true">
+    <label>Event Host</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="host" fieldForValue="host">`event-hosts-search`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="LogName" searchWhenChanged="true">
+    <label>Log Name</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="LogName" fieldForValue="LogName">`log-names-search`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="SourceName" searchWhenChanged="true">
+    <label>Source Name</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="SourceName" fieldForValue="SourceName">`source-names-search(LogName=$LogName$)`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="TaskCategory" searchWhenChanged="true">
+    <label>Task Category</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="TaskCategory" fieldForValue="TaskCategory">`task-categories-search(LogName=$LogName$, SourceName=$SourceName$)`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="EventCode" searchWhenChanged="true">
+    <label>Event Code</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="EventCode" fieldForValue="EventCode">`event-codes-search(LogName=$LogName$, SourceName=$SourceName$, TaskCategory=$TaskCategory$)`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="Type" searchWhenChanged="true">
+    <label>Type</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="Type" fieldForValue="Type">`event-types-search(LogName=$LogName$, SourceName=$SourceName$, TaskCategory=$TaskCategory$, EventCode=$EventCode$)`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="text" token="event.additional" searchWhenChanged="true">
+    <label>Additional Terms</label>
+    <default>*</default>
+  </input>
+
+  <table>
+    <searchString>`events-search(LogName=$LogName$, EventHost=$EventHost$, SourceName=$SourceName$, TaskCategory=$TaskCategory$, EventCode=$EventCode$, Type=$Type$)` $event.additional$ | timechart span=1m count by EventCode</searchString>
+    <earliestTime>$time_token.earliest$</earliestTime>
+    <latestTime>$time_token.latest$</latestTime>
+  </table>
+</panel>

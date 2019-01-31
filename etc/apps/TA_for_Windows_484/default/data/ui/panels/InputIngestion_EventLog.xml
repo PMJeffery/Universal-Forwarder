@@ -1,0 +1,9 @@
+<panel>
+  <title>Windows - Event Log ingestion over 24 hours</title>
+
+  <table>
+    <searchString>eventtype=wineventlog_windows | `compute-ingestion-stats`</searchString>
+    <earliestTime>-24h@h</earliestTime>
+    <latestTime>now</latestTime>
+  </table>
+</panel>

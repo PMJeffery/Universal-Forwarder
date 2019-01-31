@@ -1,0 +1,43 @@
+<panel>
+  <title>Windows - Print Monitoring Job Browser</title>
+
+  <input type="time" token="time_token" searchWhenChanged="true">
+    <label>Time</label>
+    <default>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+    </default>
+  </input>
+
+  <input type="dropdown" token="PrintMonitoring.Host" searchWhenChanged="true">
+    <label>Host</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="host" fieldForValue="host">eventtype=printmon_windows | dedup host sortby +host</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="PrintMonitoring.Printer" searchWhenChanged="true">
+    <label>Printer</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="printer" fieldForValue="printer">eventtype=printmon_windows host="$PrintMonitoring.Host$" | dedup printer sortby +printer</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="text" token="PrintMonitoring.Document" searchWhenChanged="true">
+    <label>Document</label>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="PrintMonitoring.User" searchWhenChanged="true">
+    <label>User</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="printer" fieldForValue="printer">eventtype=printmon_windows host="$PrintMonitoring.Host$" printer="$PrintMonitoring.Printer$" | dedup user sortby +user</populatingSearch>
+    <default>*</default>
+  </input>
+  
+  <table>
+    <searchString>eventtype=printmon_windows host="$PrintMonitoring.Host$" printer="$PrintMonitoring.Printer$" document="$PrintMonitoring.Document$" user="$PrintMonitoring.User$" | table host, printer, status, total_pages, document, user, submitted_time, size_bytes</searchString>
+    <earliestTime>$time_token.earliest$</earliestTime>
+    <latestTime>$time_token.latest$</latestTime>
+  </table>
+</panel>

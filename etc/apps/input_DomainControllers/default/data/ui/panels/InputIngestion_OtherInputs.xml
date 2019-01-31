@@ -1,0 +1,9 @@
+<panel>
+  <title>Windows - Input ingestion over 24 hours</title>
+
+  <table>
+    <searchString>index=windows | `compute-ingestion-stats`</searchString>
+    <earliestTime>-24h@h</earliestTime>
+    <latestTime>now</latestTime>
+  </table>
+</panel>

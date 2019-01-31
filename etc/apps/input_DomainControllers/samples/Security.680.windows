@@ -1,0 +1,17 @@
+02/19/10 10:57:28 AM
+LogName=Security
+SourceName=Security
+EventCode=680
+EventType=4
+Type=Success
+ComputerName=ACMEAPP
+User=@@user
+Sid=S-1-5-21-57989841-920026266-725345543-500
+SidType=1
+Category=2
+CategoryString=Account Logon
+RecordNumber=931339
+Message=Logon attempt by:   MICROSOFT_AUTHENTICATION_PACKAGE_V1_0 
+    Logon account:  @@user 
+    Source Workstation: RAID 
+    Error Code: 0xC0000064

@@ -1,0 +1,27 @@
+<panel>
+  <title>Windows - Network Information - Top Outbound Processes</title>
+
+  <input type="time" token="time_token" searchWhenChanged="true">
+    <label>Time</label>
+    <default>
+      <earliestTime>-60m@m</earliestTime>
+      <latestTime>now</latestTime>
+    </default>
+  </input>
+
+  <input type="dropdown" token="NetworkHost" searchWhenChanged="true">
+    <label>Local Host</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="host" fieldForValue="host">`netmon-hosts-search`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <chart>
+    <searchString>eventtype=netmon_windows host="$NetworkHost$" Direction=outbound | top limit=10 ProcessName</searchString>
+    <earliestTime>$time_token.earliest$</earliestTime>
+    <latestTime>$time_token.latest$</latestTime>
+    <option name="charting.chart">bar</option>
+    <option name="charting.axisTitleX.text">Process Name</option>
+    <option name="charting.axisTitleY.text">Count</option>
+  </chart>
+</panel>

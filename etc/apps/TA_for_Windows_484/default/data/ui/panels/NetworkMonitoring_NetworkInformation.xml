@@ -1,0 +1,80 @@
+<panel>
+  <title>Windows - Network Information Browser</title>
+
+  <input type="time" token="time_token" searchWhenChanged="true">
+    <label>Time</label>
+    <default>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+    </default>
+  </input>
+
+  <input type="dropdown" token="NetworkHost" searchWhenChanged="true">
+    <label>Local Host</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="host" fieldForValue="host">`netmon-hosts-search`</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="Direction" searchWhenChanged="true">
+    <label>Direction</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="Direction" fieldForValue="Direction">eventtype=netmon_windows | stats count by Direction | sort +Direction</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="Protocol" searchWhenChanged="true">
+    <label>Protocol</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="Protocol" fieldForValue="Protocol">eventtype=netmon_windows Direction="$Direction$" | stats count by Protocol | sort +Protocol</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="PacketType" searchWhenChanged="true">
+    <label>Packet Type</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="PacketType" fieldForValue="PacketType">eventtype=netmon_windows Direction="$Direction$" Protocol="$Protocol$" | stats count by PacketType | sort +PacketType</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="RemoteHostName" searchWhenChanged="true">
+    <label>Remote Host</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="RemoteHostName" fieldForValue="RemoteHostName">eventtype=netmon_windows Direction="$Direction$" Protocol="$Protocol$" PacketType="$PacketType$" | stats count by RemoteHostName | sort +RemoteHostName</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="RemotePort" searchWhenChanged="true">
+    <label>Remote Port</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="RemotePort" fieldForValue="RemotePort">eventtype=netmon_windows Direction="$Direction$" Protocol="$Protocol$" PacketType="$PacketType$" RemoteHostName="$RemoteHostName$" | stats count by RemotePort | sort +RemotePort</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="LocalPort" searchWhenChanged="true">
+    <label>Local Port</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="LocalPort" fieldForValue="LocalPort">eventtype=netmon_windows Direction="$Direction$" Protocol="$Protocol$" PacketType="$PacketType$" RemoteHostName="$RemoteHostName$" RemotePort="$RemotePort$" | stats count by LocalPort | sort +LocalPort</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="NetworkProcessName" searchWhenChanged="true">
+    <label>Process Name</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="ProcessName" fieldForValue="ProcessName">eventtype=netmon_windows Direction="$Direction$" Protocol="$Protocol$" PacketType="$PacketType$" RemoteHostName="$RemoteHostName$" RemotePort="$RemotePort$" LocalPort="$LocalPort$" | stats count by ProcessName | sort +ProcessName</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="UserName" searchWhenChanged="true">
+    <label>User Name</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="UserName" fieldForValue="UserName">eventtype=netmon_windows Direction="$Direction$" Protocol="$Protocol$" PacketType="$PacketType$" RemoteHostName="$RemoteHostName$" RemotePort="$RemotePort$" LocalPort="$LocalPort$" ProcessName="$NetworkProcessName$" | stats count by UserName | sort +UserName</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <table>
+    <searchString>eventtype=netmon_windows host="$NetworkHost$" Direction="$Direction$" Protocol="$Protocol$" PacketType="$PacketType$" RemoteHostName="$RemoteHostName$" RemotePort="$RemotePort$" ProcessName="$NetworkProcessName$" UserName="$UserName$" | table host, Direction, PacketType, Protocol, RemoteHostName, LocalPort, RemotePort, ProcessName, UserName</searchString>
+    <earliestTime>$time_token.earliest$</earliestTime>
+    <latestTime>$time_token.latest$</latestTime>
+  </table>
+</panel>

@@ -1,0 +1,38 @@
+<panel>
+  <title>Windows - Print Monitoring Browser</title>
+
+  <input type="time" token="time_token" searchWhenChanged="true">
+    <label>Time</label>
+    <default>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+    </default>
+  </input>
+
+  <input type="dropdown" token="PrintMonitoring.Host" searchWhenChanged="true">
+    <label>Host</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="host" fieldForValue="host">eventtype=printmon_windows | dedup host sortby +host</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="PrintMonitoring.Printer" searchWhenChanged="true">
+    <label>Printer</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="printer" fieldForValue="printer">eventtype=printmon_windows host="$PrintMonitoring.Host$" | dedup printer sortby +printer</populatingSearch>
+    <default>*</default>
+  </input>
+
+  <input type="dropdown" token="PrintMonitoring.Operation" searchWhenChanged="true">
+    <label>Operation</label>
+    <choice value="*">All</choice>
+    <populatingSearch earliest="$time_token.earliest$" latest="$time_token.latest$" fieldForLabel="operation" fieldForValue="operation">eventtype=printmon_windows host="$PrintMonitoring.Host$" printer="$PrintMonitoring.Printer$" | dedup operation sortby +operation</populatingSearch>
+    <default>*</default>
+  </input>
+  
+  <table>
+    <searchString>eventtype=printmon_windows host="$PrintMonitoring.Host$" printer="$PrintMonitoring.Printer$" operation="$PrintMonitoring.Operation$" | table host, printer, status, operation, driver, print_processor, priority, port</searchString>
+    <earliestTime>$time_token.earliest$</earliestTime>
+    <latestTime>$time_token.latest$</latestTime>
+  </table>
+</panel>
